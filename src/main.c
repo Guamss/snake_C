@@ -30,7 +30,11 @@ void* key_event_loop(void* arg) {
 }
 
 int main() {
+	
 	init_graphics(WINDOW_WIDTH, WINDOW_HEIGHT);
+	show_start_screen();
+	wait_escape();
+	
 	int** map = init_game_map(GRID_WIDTH, GRID_HEIGHT);
 	init_grid(map);
 	LinkedList* snake = spawn_snake(map);
@@ -40,8 +44,8 @@ int main() {
 	
 	while (!finished) {
 		spawn_apple(map);
-		usleep(250000); // O.25s
-		move_snake(snake, map, going);
+		usleep(100000); // O.10s
+		move_snake(&snake, map, going);
 	}
 	
 	

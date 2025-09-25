@@ -49,6 +49,11 @@ void init_grid(int** map) {
     }
 }
 
+void show_start_screen() {
+	POINT pos = { WINDOW_WIDTH/2, WINDOW_HEIGHT/2 };
+	aff_pol("Commencer le jeu en appuyant sur ECHAP", 16, pos, blanc);
+}
+
 void update_map(int** map) {
     
     for (int i=0; i< GRID_WIDTH; i++) {

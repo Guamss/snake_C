@@ -9,10 +9,15 @@ LinkedList* init_linked_list(POINT initial_value) {
 }
 
 void add_to_linked_list(LinkedList** head, POINT new_value) {
-    LinkedList* new_node = malloc(sizeof(LinkedList));
+	LinkedList* new_node = malloc(sizeof(LinkedList));
     new_node->cell = new_value;
-    new_node->next = *head;
-    *head = new_node;
+    new_node->next = NULL;
+	
+    LinkedList* current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = new_node;
 }
 
 

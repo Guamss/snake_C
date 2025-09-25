@@ -7,7 +7,6 @@
 
 int no_apple_in_map = 1;
 int score = 0;
-POINT last_snake_pos = {0, 0);
 
 int** init_game_map(int width, int height) {
     int** map = malloc(width * sizeof(int*));
@@ -28,16 +27,19 @@ void clear_game_map(int** map, int width, int height) {
 }
 
 void spawn_apple(int** map) {
-	
-	// TODO : parcourir la lst pour supprimer les cases où se situe le 
-	// serpent de la grille sur une copie de celle-ci et faire le tirage du fruit
-	
-	if (no_apple_in_map) {	
-		srand(time(NULL)); // generate seed
-		int random_x = rand() % GRID_WIDTH;
-		int random_y = rand() % GRID_HEIGHT;
-		map[random_x][random_y] = APPLE;
-		no_apple_in_map = 0;
+	if (no_apple_in_map) {
+		int is_pos_illegal = 1;
+		while (is_pos_illegal) {
+			srand(time(NULL)); // generate seed
+			int random_x = rand() % GRID_WIDTH;
+			int random_y = rand() % GRID_HEIGHT;
+			if (map[random_x][random_y] != SNAKE) {
+				printf("(%i, %i)\n", random_x, random_y);  
+				map[random_x][random_y] = APPLE;
+				is_pos_illegal = 0;
+				no_apple_in_map = 0;
+			}
+		}
 		update_map(map);
 	}
 }
@@ -53,47 +55,58 @@ LinkedList* spawn_snake(int** map) {
 	return init_linked_list(snake_initial_pos);
 }
 
-void update_snake(LinkedList* snake) {
-	
-}
+void move_snake(LinkedList** snake, int** map, int where_snake_is_going) {
+    POINT last_snake_pos = (*snake)->cell;
 
-void move_snake(LinkedList* snake, int** map, int where_snake_is_going) {
-	map[snake->cell.x][snake->cell.y] = NOTHING;	
-	last_snake_pos.x = snake->cell.x;
-	last_snake_pos.y = snake->cell.y;
-	
-	switch(where_snake_is_going) {
-		case UP:
-			snake->cell.y++;
-			break;
-		case DOWN:
-			snake->cell.y--;
-			break;
-		case RIGHT:
-			snake->cell.x++;
-			break;
-		case LEFT:
-			snake->cell.x--;
-			break;
-		default:
-			snake->cell.x++;
-	}
-	if (snake->cell.x >= GRID_WIDTH || snake->cell.y >= GRID_HEIGHT || snake->cell.x < 0 || snake->cell.y < 0) {
-		printf("tu as perdu !\n");
-		exit(0);
-	}
-	if (map[snake->cell.x][snake->cell.y] == SNAKE) {
-		printf("tu as perdu !\n");
-		exit(0);
-	}
-	if (map[snake->cell.x][snake->cell.y] == APPLE) {
-		score++;
-		no_apple_in_map = 1;
-		// augmenter la taille du bestio
-		add_to_linked_list(snake, last_snake_pos);
-		update_snake(snake);
-	}
-	map[snake->cell.x][snake->cell.y] = SNAKE;
-	update_map(map);
-	
+    switch(where_snake_is_going) {
+        case UP:
+            (*snake)->cell.y++;
+            break;
+        case DOWN:
+            (*snake)->cell.y--;
+            break;
+        case RIGHT:
+            (*snake)->cell.x++;
+            break;
+        case LEFT:
+            (*snake)->cell.x--;
+            break;
+        default:
+            (*snake)->cell.x++;
+    }
+
+    // collisions
+    if ((*snake)->cell.x >= GRID_WIDTH || (*snake)->cell.y >= GRID_HEIGHT ||
+        (*snake)->cell.x < 0 || (*snake)->cell.y < 0) {
+        printf("tu as perdu !\n");
+        exit(0);
+    }
+    if (map[(*snake)->cell.x][(*snake)->cell.y] == SNAKE) {
+        printf("tu as perdu !\n");
+        exit(0);
+    }
+
+    int ate_apple = (map[(*snake)->cell.x][(*snake)->cell.y] == APPLE);
+
+    map[(*snake)->cell.x][(*snake)->cell.y] = SNAKE;
+
+    LinkedList* current = (*snake)->next;
+    POINT temp_pos;
+    while (current) {
+        temp_pos = current->cell;
+        current->cell = last_snake_pos;
+        map[last_snake_pos.x][last_snake_pos.y] = SNAKE;
+        last_snake_pos = temp_pos;
+        current = current->next;
+    }
+
+    if (ate_apple) {
+        score++;
+        no_apple_in_map = 1;
+        add_to_linked_list(snake, last_snake_pos);
+    } else {
+        map[last_snake_pos.x][last_snake_pos.y] = NOTHING;
+    }
+
+    update_map(map);
 }

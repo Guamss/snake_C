@@ -1,3 +1,5 @@
+#include "../graphics/graphics.h"
+
 typedef struct linked_list {
 	POINT cell;
 	struct linked_list* next;

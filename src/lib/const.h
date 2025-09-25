@@ -10,3 +10,8 @@
 #define NOTHING 0
 #define SNAKE 1
 #define APPLE 2
+
+#define UP 1
+#define RIGHT 2
+#define LEFT 3
+#define DOWN 4

@@ -1,4 +1,3 @@
-#include "../graphics/graphics.h"
 #include "linked_list.h"
 
 LinkedList* init_linked_list(POINT initial_value) {

@@ -34,7 +34,6 @@ void spawn_apple(int** map) {
 			int random_x = rand() % GRID_WIDTH;
 			int random_y = rand() % GRID_HEIGHT;
 			if (map[random_x][random_y] != SNAKE) {
-				printf("(%i, %i)\n", random_x, random_y);  
 				map[random_x][random_y] = APPLE;
 				is_pos_illegal = 0;
 				no_apple_in_map = 0;
@@ -78,12 +77,10 @@ void move_snake(LinkedList** snake, int** map, int where_snake_is_going) {
     // collisions
     if ((*snake)->cell.x >= GRID_WIDTH || (*snake)->cell.y >= GRID_HEIGHT ||
         (*snake)->cell.x < 0 || (*snake)->cell.y < 0) {
-        printf("tu as perdu !\n");
-        exit(0);
+		show_game_end_screen(score);
     }
     if (map[(*snake)->cell.x][(*snake)->cell.y] == SNAKE) {
-        printf("tu as perdu !\n");
-        exit(0);
+		show_game_end_screen(score);
     }
 
     int ate_apple = (map[(*snake)->cell.x][(*snake)->cell.y] == APPLE);

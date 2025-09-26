@@ -33,7 +33,6 @@ int main() {
 	
 	init_graphics(WINDOW_WIDTH, WINDOW_HEIGHT);
 	show_start_screen();
-	wait_escape();
 	
 	int** map = init_game_map(GRID_WIDTH, GRID_HEIGHT);
 	init_grid(map);

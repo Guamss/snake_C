@@ -50,8 +50,24 @@ void init_grid(int** map) {
 }
 
 void show_start_screen() {
-	POINT pos = { WINDOW_WIDTH/2, WINDOW_HEIGHT/2 };
-	aff_pol("Commencer le jeu en appuyant sur ECHAP", 16, pos, blanc);
+	POINT pos = { WINDOW_WIDTH/4, WINDOW_HEIGHT/2 };
+	aff_pol("CLIQUEZ pour commencer le jeu", 24, pos, blanc);
+	wait_clic();
+	fill_screen(noir);
+}
+
+void show_game_end_screen(int score) {
+	fill_screen(noir);
+	POINT pos1 = { WINDOW_WIDTH/3, WINDOW_HEIGHT/2 };
+	
+	char message[256];
+	snprintf(message, sizeof(message), "Votre score est : %i", score); 
+
+	aff_pol(message, 24, pos1, blanc);
+	POINT pos2 = { WINDOW_WIDTH/5, pos1.y-50 };
+	aff_pol("Cliquez sur ECHAP pour quitter le jeu.", 24, pos2, blanc);
+	wait_escape();
+	
 }
 
 void update_map(int** map) {

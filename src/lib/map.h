@@ -1,3 +1,4 @@
+#pragma once
 #include "linked_list.h"
 
 int** init_game_map(int width, int height);

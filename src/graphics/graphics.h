@@ -1,3 +1,4 @@
+#pragma once
 // ############################################
 //       UVSQ -- Licence UFR des Sciences
 //
